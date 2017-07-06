@@ -260,6 +260,7 @@ function update() {
             }
         }
     }
+
     //ship bolts -> enemies
     for (var i = 0; i < shipEnemyArr.length; i++) {
         for (var j = 0; j < boltsShipArr.length; j++) {
