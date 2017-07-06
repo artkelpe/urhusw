@@ -240,6 +240,7 @@ function update() {
         }
     }
 
+
     //console.log(boltsEnemyArr);
     for (var i = 0; i < boltsEnemyArr.length; i++) {
         boltsEnemyArr[i].countPosition();
