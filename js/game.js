@@ -39,12 +39,14 @@ window.addEventListener('keyup', function(e) {
 }, false);
 
 // Constants
-var CANVASWIDTH = 920;
-var CANVASHEIGHT = 520;
+var CANVASWIDTH = 920,
+    CANVASHEIGHT = 520,
+    STARSIZE = 2;
 
 // Global vars
 var backCanvas, backContext, canvas, context,
-    stars = [], starSize = 2, movingStars,
+    stars = [], movingStars,
+    healthMeterImg,
     ship, shipShooting = 0,
     shipU, shipL, shipD, shipR, // bools indicating if the ship is moving in concrete direction
     shipEnemyArr = [],
@@ -59,8 +61,14 @@ function IShip() {}
 IShip.prototype.countPosition = function() {
     this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
 };
+IShip.prototype.countWidthHeight = function() {
+    this.width = this.img.width;
+    this.height = this.img.height;
+};
 
-function IBolt() {}
+function IBolt() {
+    this.size = 30;
+}
 IBolt.prototype.countPosition = function() {
     this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
 };
@@ -77,10 +85,12 @@ function Ship(imgPath, imgProtectedPath) {
     this.imgProtected = new Image(); this.imgProtected.src = imgProtectedPath;
     this.x = 0;
     this.y = 0;
+
     this.health = 100;
     this.speed = 5;
     this.isProtected = 0;
     this.timeForProtected = 0;
+    this.score = 100;
 
     this.countPosition = function () {
         // diagonal directions
@@ -121,6 +131,7 @@ function Ship(imgPath, imgProtectedPath) {
         if (ship.timeForProtected === 0)
             ship.isProtected = 0;
     }
+    this.countWidthHeight = IShip.prototype.countWidthHeight;
 }
 
 function ShipEnemy(imgSrc, y, health, speed, shootingSpeed) {
@@ -134,17 +145,18 @@ function ShipEnemy(imgSrc, y, health, speed, shootingSpeed) {
     this.direction = 1;
     this.health = health;
     this.speed = speed;
+    this.value = 10 * health;
     this.shootingSpeed = shootingSpeed;
     this.counterForShooting = 0;
     this.isShooting = 0;
 
     this.countPosition = IShip.prototype.countPosition;
+    this.countWidthHeight = IShip.prototype.countWidthHeight;
 }
 
 function BoltShip() {
-    /*IBolt.call(this); //ЭТО НАСЛЕДОВАНИе
-    IBolt.apply(this);
-    BoltShip.__proto__ = IBolt;*/
+    IBolt.call(this); //ЭТО НАСЛЕДОВАНИе
+    BoltShip.__proto__ = IBolt;
     this.img = new Image();
     this.img.src = "res/laser11.png";
     this.y = ship.y + 20;
@@ -157,6 +169,7 @@ function BoltShip() {
 }
 
 function BoltEnemy(x, y, speed, direction) {
+    IBolt.call(this);
     this.img = new Image();
     this.img.src = "res/laser21.png";
     this.x = x;
@@ -168,30 +181,39 @@ function BoltEnemy(x, y, speed, direction) {
 }
 
 //-------------------------------    updates     ----------------------------------------------------------------------
-function updateStars() {
+function updateBackground() {
     backContext.fillStyle = "#223";
-    backContext.fillRect(0, 0, CANVASWIDTH, CANVASHEIGHT);
+    backContext.fillRect(0, 0, CANVASWIDTH, CANVASHEIGHT+30);
     for (var i = 0; i < stars.length; i++) {
         backContext.fillStyle = stars[i].colour;
         stars[i].x = stars[i].x - 1;
-        if (stars[i].x < -3) {
+        if (stars[i].x < -STARSIZE) {
             stars[i].x = CANVASWIDTH;
             stars[i].y = Math.floor(Math.random() * (CANVASHEIGHT));
         }
-        backContext.fillRect(stars[i].x, stars[i].y, starSize, starSize);
+        backContext.fillRect(stars[i].x, stars[i].y, STARSIZE, STARSIZE);
     }
+
+    backContext.fillStyle = "#239c28";
+    backContext.fillRect(35, 520, (590 * ship.health / 100 < 0)? 0 : 590 * ship.health / 100, 20);
+
+    backContext.drawImage(healthMeterImg, 20, CANVASHEIGHT-10);
+
+    backContext.font="15px fffforwa";
+    backContext.fillText("SCORE:   " + ship.score, 710, CANVASHEIGHT+20);
 }
 
 function update() {
     context.fillStyle="rgba(0, 0, 200, 0)";
     context.fill();
 
-    // ---------------  count positions       ---------------------------------------------------------------------
+    // ---------------  count positions       ---------------------------
     // ship
     ship.updateShip();
 
     if (shipShooting === 1 ){
         boltsShipArr.push(new BoltShip(IBolt));
+        ship.score -= 1;
         shipShooting = 2;
     }
 
@@ -223,7 +245,45 @@ function update() {
         boltsEnemyArr[i].countPosition();
     }
 
-    //-----------------    draw everything    -------------------------------------------------
+    //-----------------    check collisions    -------------------------------
+    //enemy bolts -> ship
+    if (!ship.isProtected) {
+        for (var i = 0; i < boltsEnemyArr.length; i++) {
+            if (ship.x < boltsEnemyArr[i].x + boltsEnemyArr[i].size &&
+                ship.x + ship.width > boltsEnemyArr[i].x &&
+                ship.y < boltsEnemyArr[i].y + boltsEnemyArr[i].size &&
+                ship.y + ship.height > boltsEnemyArr[i].y)
+            {
+                console.log("SHOT");
+                boltsEnemyArr.splice(i, 1);
+                ship.health -= 10;
+            }
+        }
+    }
+    //ship bolts -> enemies
+    for (var i = 0; i < shipEnemyArr.length; i++) {
+        for (var j = 0; j < boltsShipArr.length; j++) {
+            if (shipEnemyArr[i].x < boltsShipArr[j].x + boltsShipArr[j].size &&
+                shipEnemyArr[i].x + shipEnemyArr[i].width > boltsShipArr[j].x &&
+                shipEnemyArr[i].y < boltsShipArr[j].y + boltsShipArr[j].size &&
+                shipEnemyArr[i].y + shipEnemyArr[i].height > boltsShipArr[j].y)
+            {
+                boltsShipArr.splice(i, 1);
+                shipEnemyArr[i].health -= 10;
+            }
+        }
+    }
+    // remove enemies with no health
+    for (var i = 0; i < shipEnemyArr.length; i++) {
+        if (shipEnemyArr[i].health < 1) {
+            ship.score += shipEnemyArr[i].value;
+            shipEnemyArr.splice(i, 1);
+
+        }
+    }
+
+
+    //-----------------    draw everything    --------------------------------
     //ship
     context.drawImage( (ship.isProtected === 0) ? ship.img : ship.imgProtected, ship.x, ship.y);
 
@@ -262,12 +322,12 @@ function init() {
     // setting canvases
     backCanvas = document.getElementById("backCanv");
     backCanvas.width = CANVASWIDTH;
-    backCanvas.height = CANVASHEIGHT;
+    backCanvas.height = CANVASHEIGHT+40;
     backContext = backCanvas.getContext('2d');
 
     canvas = document.getElementById("frontCanv");
     canvas.width = CANVASWIDTH;
-    canvas.height = CANVASHEIGHT;
+    canvas.height = CANVASHEIGHT+40;
     context = backCanvas.getContext('2d');
 
     // create stars on background
@@ -278,10 +338,15 @@ function init() {
             value: .7
         })));
     // make stars move
-    movingStars = setInterval(updateStars, 25);
+    movingStars = setInterval(updateBackground, 25);
+
+    //add healthBar
+    healthMeterImg = new Image();
+    healthMeterImg.src = 'res/healthMeter.png';
 
     // create ship
     ship = new Ship("res/ship.png", "res/shipProtected.png");
+    ship.countWidthHeight();
 
 
     // function                                  ShipEnemy(imgSrc, y, health, speed, shootingSpeed)
