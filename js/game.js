@@ -184,7 +184,7 @@ function BoltEnemy(x, y, speed, direction) {
 function updateBackground() {
     backContext.fillStyle = "#223";
     backContext.fillRect(0, 0, CANVASWIDTH, CANVASHEIGHT+30);
-    for (var i = 0; i < stars.length; i++) {
+    for (let i = 0; i < stars.length; i++) {
         backContext.fillStyle = stars[i].colour;
         stars[i].x = stars[i].x - 1;
         if (stars[i].x < -STARSIZE) {
@@ -218,7 +218,7 @@ function update() {
     }
 
     // enemy ships
-    for (var i = 0; i < shipEnemyArr.length; i++) {
+    for (let i = 0; i < shipEnemyArr.length; i++) {
         shipEnemyArr[i].countPosition();
         shipEnemyArr[i].counterForShooting += 1;
         if (shipEnemyArr[i].counterForShooting === shipEnemyArr[i].shootingSpeed)
@@ -226,13 +226,13 @@ function update() {
     }
 
     // ship bolts
-    for (var i = 0; i < boltsShipArr.length; i++) {
+    for (let i = 0; i < boltsShipArr.length; i++) {
         boltsShipArr[i].countPosition();
 
     }
 
     // enemy ship bolts
-    for (var i = 0; i < shipEnemyArr.length; i++) {
+    for (let i = 0; i < shipEnemyArr.length; i++) {
         if (shipEnemyArr[i].isShooting === 1) {
             boltsEnemyArr.push(new BoltEnemy(shipEnemyArr[i].x-18, shipEnemyArr[i].y+10, 5, 1));
             shipEnemyArr[i].counterForShooting = 0;
@@ -242,14 +242,14 @@ function update() {
 
 
     //console.log(boltsEnemyArr);
-    for (var i = 0; i < boltsEnemyArr.length; i++) {
+    for (let i = 0; i < boltsEnemyArr.length; i++) {
         boltsEnemyArr[i].countPosition();
     }
 
     //-----------------    check collisions    -------------------------------
     //enemy bolts -> ship
     if (!ship.isProtected) {
-        for (var i = 0; i < boltsEnemyArr.length; i++) {
+        for (let i = 0; i < boltsEnemyArr.length; i++) {
             if (ship.x < boltsEnemyArr[i].x + boltsEnemyArr[i].size &&
                 ship.x + ship.width > boltsEnemyArr[i].x &&
                 ship.y < boltsEnemyArr[i].y + boltsEnemyArr[i].size &&
@@ -263,8 +263,8 @@ function update() {
     }
 
     //ship bolts -> enemies
-    for (var i = 0; i < shipEnemyArr.length; i++) {
-        for (var j = 0; j < boltsShipArr.length; j++) {
+    for (let i = 0; i < shipEnemyArr.length; i++) {
+        for (let j = 0; j < boltsShipArr.length; j++) {
             if (shipEnemyArr[i].x < boltsShipArr[j].x + boltsShipArr[j].size &&
                 shipEnemyArr[i].x + shipEnemyArr[i].width > boltsShipArr[j].x &&
                 shipEnemyArr[i].y < boltsShipArr[j].y + boltsShipArr[j].size &&
@@ -276,7 +276,7 @@ function update() {
         }
     }
     // remove enemies with no health
-    for (var i = 0; i < shipEnemyArr.length; i++) {
+    for (let i = 0; i < shipEnemyArr.length; i++) {
         if (shipEnemyArr[i].health < 1) {
             ship.score += shipEnemyArr[i].value;
             shipEnemyArr.splice(i, 1);
@@ -290,7 +290,7 @@ function update() {
     context.drawImage( (ship.isProtected === 0) ? ship.img : ship.imgProtected, ship.x, ship.y);
 
     //enemy ships
-    for (var i = 0; i < shipEnemyArr.length; i++) {
+    for (let i = 0; i < shipEnemyArr.length; i++) {
         if (shipEnemyArr[i].x < -100)
             shipEnemyArr.splice(i, 1);
         else {
@@ -299,7 +299,7 @@ function update() {
     }
 
     //bolts
-    for (var i = 0; i < boltsShipArr.length; i++) {
+    for (let i = 0; i < boltsShipArr.length; i++) {
         if (boltsShipArr[i].x > CANVASWIDTH)
             boltsShipArr.splice(i, 1);
         else
@@ -307,7 +307,7 @@ function update() {
     }
 
     //enemy bolts
-    for (var i = 0; i < boltsEnemyArr.length; i++) {
+    for (let i = 0; i < boltsEnemyArr.length; i++) {
         if (boltsEnemyArr[i].x < -15)
             boltsEnemyArr.splice(i, 1);
         else
@@ -333,7 +333,7 @@ function init() {
     context = backCanvas.getContext('2d');
 
     // create stars on background
-    for (var i = 0; i < 40; i++)
+    for (let i = 0; i < 40; i++)
         stars.push(new Star(Math.floor(Math.random() * (CANVASWIDTH)), Math.floor(Math.random() * (CANVASHEIGHT)), Please.make_color({
             hue: 12,
             saturation: .20,
