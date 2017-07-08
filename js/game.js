@@ -2,6 +2,9 @@
  * Created by kelpe on 15/06/17.
  */
 
+
+//    http://scrumblr.ca/urhusw
+
 window.requestAnimFrame = (function(callback) {
     return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
         function(callback) {
@@ -222,7 +225,7 @@ function update() {
 
     // ---------------  count positions       ---------------------------
     // ship
-    ship.updateShip();
+    ship.countPosition();
 
     if (shipShooting === 1 ){
         boltsShipArr.push(new BoltShip(IBolt));
@@ -271,7 +274,7 @@ function update() {
                 boltsEnemyArr.splice(i, 1);
                 ship.health -= 10;
                 ship.isHurt = 1;
-                setTimeout(function () {ship.isHurt = 0 ;}, 80);
+                setTimeout(function () {ship.isHurt = 0 ;}, 20);
 
             }
         }
