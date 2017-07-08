@@ -80,9 +80,10 @@ function Star(x, y, colour) {
     this.colour = colour;
 }
 
-function Ship(imgPath, imgProtectedPath) {
+function Ship(imgPath, imgProtectedPath, imgHurtPath) {
     this.img = new Image(); this.img.src = imgPath;
     this.imgProtected = new Image(); this.imgProtected.src = imgProtectedPath;
+    this.imgHurt = new Image(); this.imgHurt.src = imgHurtPath;
     this.x = 0;
     this.y = 0;
 
@@ -90,6 +91,7 @@ function Ship(imgPath, imgProtectedPath) {
     this.speed = 5;
     this.isProtected = 0;
     this.timeForProtected = 0;
+    this.isHurt = 0;
     this.score = 100;
 
     this.countPosition = function () {
@@ -130,7 +132,7 @@ function Ship(imgPath, imgProtectedPath) {
             ship.timeForProtected--;
         if (ship.timeForProtected === 0)
             ship.isProtected = 0;
-    }
+    };
     this.countWidthHeight = IShip.prototype.countWidthHeight;
 }
 
@@ -241,7 +243,6 @@ function update() {
     }
 
 
-    //console.log(boltsEnemyArr);
     for (let i = 0; i < boltsEnemyArr.length; i++) {
         boltsEnemyArr[i].countPosition();
     }
@@ -258,6 +259,9 @@ function update() {
                 console.log("SHOT");
                 boltsEnemyArr.splice(i, 1);
                 ship.health -= 10;
+                ship.isHurt = 1;
+                setTimeout(function () {ship.isHurt = 0 ;}, 80);
+
             }
         }
     }
@@ -287,7 +291,18 @@ function update() {
 
     //-----------------    draw everything    --------------------------------
     //ship
-    context.drawImage( (ship.isProtected === 0) ? ship.img : ship.imgProtected, ship.x, ship.y);
+    if (ship.isProtected === 1) {
+        context.drawImage(ship.imgProtected, ship.x, ship.y);
+    }
+    else if (ship.isHurt === 1) {
+        context.drawImage(ship.imgHurt, ship.x, ship.y);
+        console.log("hurt");
+    }
+    else {
+        context.drawImage(ship.img, ship.x, ship.y);
+    }
+
+    //context.drawImage( (ship.isProtected === 0) ? ship.img : ship.imgProtected, ship.x, ship.y);
 
     //enemy ships
     for (let i = 0; i < shipEnemyArr.length; i++) {
@@ -347,7 +362,7 @@ function init() {
     healthMeterImg.src = 'res/healthMeter.png';
 
     // create ship
-    ship = new Ship("res/ship.png", "res/shipProtected.png");
+    ship = new Ship("res/ship.png", "res/shipProtected.png", "res/shipHurt.png");
     ship.countWidthHeight();
 
 
