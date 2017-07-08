@@ -57,44 +57,52 @@ var backCanvas, backContext, canvas, context,
 
 
 //--------------------------------    Interface definitions    ---------------------------------------------------------
-function IShip() {}
-IShip.prototype.countPosition = function() {
-    this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
-};
-IShip.prototype.countWidthHeight = function() {
-    this.width = this.img.width;
-    this.height = this.img.height;
-};
-
-function IBolt() {
-    this.size = 30;
+class IShip {
+    countPosition() {
+        this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
+    }
+    countWidthHeight() {
+        this.width = this.img.width;
+        this.height = this.img.height;
+    }
 }
-IBolt.prototype.countPosition = function() {
-    this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
-};
+
+class IBolt {
+    constructor (direction) {
+        this.size = 30;
+        this.direction = direction;
+    }
+    countPosition() {
+        this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
+    }
+}
 
 //--------------------------------     Class definitions      ----------------------------------------------------------
-function Star(x, y, colour) {
-    this.x = x;
-    this.y = y;
-    this.colour = colour;
+
+class Star {
+    constructor(x, y, colour) {
+        this.x = x;
+        this.y = y;
+        this.colour = colour;
+    }
 }
 
-function Ship(imgPath, imgProtectedPath, imgHurtPath) {
-    this.img = new Image(); this.img.src = imgPath;
-    this.imgProtected = new Image(); this.imgProtected.src = imgProtectedPath;
-    this.imgHurt = new Image(); this.imgHurt.src = imgHurtPath;
-    this.x = 0;
-    this.y = 0;
-
-    this.health = 100;
-    this.speed = 5;
-    this.isProtected = 0;
-    this.timeForProtected = 0;
-    this.isHurt = 0;
-    this.score = 100;
-
-    this.countPosition = function () {
+class Ship extends IShip{
+    constructor(imgPath, imgProtectedPath, imgHurtPath) {
+        super();
+        this.img = new Image(); this.img.src = imgPath;
+        this.imgProtected = new Image(); this.imgProtected.src = imgProtectedPath;
+        this.imgHurt = new Image(); this.imgHurt.src = imgHurtPath;
+        this.x = 0;
+        this.y = 0;
+        this.health = 100;
+        this.speed = 5;
+        this.isProtected = 0;
+        this.timeForProtected = 0;
+        this.isHurt = 0;
+        this.score = 100;
+    }
+    countPosition() {
         // diagonal directions
         if (shipU === 1 && shipL === 1) {
             if (ship.y > 0) ship.y = ship.y - ship.speed;
@@ -125,61 +133,64 @@ function Ship(imgPath, imgProtectedPath, imgHurtPath) {
         else if (shipD === 1) {
             if (ship.y < CANVASHEIGHT - 80) ship.y = ship.y + ship.speed;
         }
-    };
-    this.updateShip = function () {
+    }
+    updateShip() {
         this.countPosition();
         if (ship.isProtected)
             ship.timeForProtected--;
         if (ship.timeForProtected === 0)
             ship.isProtected = 0;
-    };
-    this.countWidthHeight = IShip.prototype.countWidthHeight;
+    }
+    countWidthHeight() { super.countWidthHeight() }
+
 }
 
-function ShipEnemy(imgSrc, y, health, speed, shootingSpeed) {
-    this.img = new Image();
-    this.img.src = imgSrc;
-    this.x = CANVASWIDTH;
-    if (y === 0)
-        this.y = Math.floor((Math.random() * CANVASHEIGHT-70) + 1);
-    else
+class ShipEnemy extends IShip{
+    constructor(imgSrc, y, health, speed, shootingSpeed) {
+        super();
+        this.img = new Image();
+        this.img.src = imgSrc;
+        this.x = CANVASWIDTH;
+        if (y === 0)
+            this.y = Math.floor((Math.random() * CANVASHEIGHT-70) + 1);
+        else
+            this.y = y;
+        this.direction = 1;
+        this.health = health;
+        this.speed = speed;
+        this.value = 10 * health;
+        this.shootingSpeed = shootingSpeed;
+        this.counterForShooting = 0;
+        this.isShooting = 0;
+    }
+    countPosition() { super.countPosition(); }
+    countWidthHeight() { super.countWidthHeight(); }
+}
+
+class BoltShip extends IBolt {
+    constructor() {
+        super();
+        this.img = new Image();
+        this.img.src = "res/laser11.png";
+        this.y = ship.y + 20;
+        this.x = ship.x + 93;
+        this.speed = 10;
+        this.direction = 0;
+    }
+    countPosition() { super.countPosition(); }
+}
+
+class BoltEnemy extends IBolt {
+    constructor(x, y, speed, direction) {
+        super();
+        this.img = new Image();
+        this.img.src = "res/laser21.png";
+        this.x = x;
         this.y = y;
-    this.direction = 1;
-    this.health = health;
-    this.speed = speed;
-    this.value = 10 * health;
-    this.shootingSpeed = shootingSpeed;
-    this.counterForShooting = 0;
-    this.isShooting = 0;
-
-    this.countPosition = IShip.prototype.countPosition;
-    this.countWidthHeight = IShip.prototype.countWidthHeight;
-}
-
-function BoltShip() {
-    IBolt.call(this); //ЭТО НАСЛЕДОВАНИе
-    BoltShip.__proto__ = IBolt;
-    this.img = new Image();
-    this.img.src = "res/laser11.png";
-    this.y = ship.y + 20;
-    this.x = ship.x + 93;
-    this.speed = 10;
-    this.direction = 0;
-
-    this.countPosition = IBolt.prototype.countPosition;
-
-}
-
-function BoltEnemy(x, y, speed, direction) {
-    IBolt.call(this);
-    this.img = new Image();
-    this.img.src = "res/laser21.png";
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
-    this.direction = direction;
-
-    this.countPosition = IBolt.prototype.countPosition;
+        this.speed = speed;
+        this.direction = direction;
+    }
+    countPosition() { super.countPosition(); }
 }
 
 //-------------------------------    updates     ----------------------------------------------------------------------
