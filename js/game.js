@@ -12,6 +12,14 @@ window.requestAnimFrame = (function(callback) {
         };
 })();
 
+/*
+patterns of movements:
+ _   go down
+ -   go straight
+ ^   go up
+ .   dont move
+*/
+
 
 // states of striking:
 //  0 - nothing
@@ -52,6 +60,7 @@ var backCanvas, backContext, canvas, context,
     healthMeterImg,
     ship, shipShooting = 0,
     shipU, shipL, shipD, shipR, // bools indicating if the ship is moving in concrete direction
+    shipEnemyPatternCounter = 20, // how much frames for each element in enemy's pattern
     shipEnemyArr = [],
     boltsShipArr = [], // array of bolts from ship that are on the screen right now
     boltsEnemyArr = [] // array of bolts from enemies that are on the screen right now
@@ -149,10 +158,9 @@ class Ship extends IShip{
 }
 
 class ShipEnemy extends IShip{
-    constructor(imgSrc, y, health, speed, shootingSpeed) {
+    constructor(imgSrc, y, health, speed, shootingSpeed, pattern="-") {
         super();
-        this.img = new Image();
-        this.img.src = imgSrc;
+        this.img = new Image();this.img.src = imgSrc;
         this.x = CANVASWIDTH;
         if (y === 0)
             this.y = Math.floor((Math.random() * CANVASHEIGHT-70) + 1);
@@ -165,14 +173,49 @@ class ShipEnemy extends IShip{
         this.shootingSpeed = shootingSpeed;
         this.counterForShooting = 0;
         this.isShooting = 0;
+        this.pattern = pattern;
+        this.actualElemOfPattern = 0;
+        this.counterForPattern = 0;
     }
-    countPosition() { super.countPosition(); }
+    countPosition() {
+        //super.countPosition();
+
+        this.counterForPattern += 1;
+        if (this.counterForPattern === shipEnemyPatternCounter){
+            this.counterForPattern = 0;
+            this.actualElemOfPattern += 1;
+            if (this.actualElemOfPattern === this.pattern.length)
+                this.actualElemOfPattern = 0;
+        }
+        switch (this.pattern[this.actualElemOfPattern]){
+            case '_':{
+                this.y = this.y + 5;
+                super.countPosition();
+                break;
+            }
+            case '-':{
+                super.countPosition();
+                break;
+            }
+            case '^':{
+                this.y = this.y - 5;
+                super.countPosition();
+                break;
+            }
+            case '.':{
+                break;
+            }
+            default:{
+                super.countPosition();
+            }
+        }
+    }
     countWidthHeight() { super.countWidthHeight(); }
 }
 
 class BoltShip extends IBolt {
     constructor() {
-        super();
+        super(0);
         this.img = new Image();
         this.img.src = "res/laser11.png";
         this.y = ship.y + 20;
@@ -185,13 +228,13 @@ class BoltShip extends IBolt {
 
 class BoltEnemy extends IBolt {
     constructor(x, y, speed, direction) {
-        super();
+        super(1);
         this.img = new Image();
         this.img.src = "res/laser21.png";
         this.x = x;
         this.y = y;
         this.speed = speed;
-        this.direction = direction;
+        //this.direction = direction;
     }
     countPosition() { super.countPosition(); }
 }

@@ -18,7 +18,8 @@ var levels = {
          'health': 10,
          'speed': 1.8,
          'shootingSpeed': 80,
-         'delay': 500
+         'delay': 500,
+         'pattern': "-_-^"
         }, {
          'type':12,
          'y': 450,
@@ -32,7 +33,8 @@ var levels = {
          'health': 10,
          'speed': 1.5,
          'shootingSpeed': 80,
-         'delay': 3000
+         'delay': 3000,
+         'pattern': ""
         },{
          'type':11,
          'y': 320,
@@ -46,7 +48,11 @@ var levels = {
 // function                   ShipEnemy(imgSrc, y, health, speed, shootingSpeed)
 function loadLevel(lvl) {
     for (let l of lvl) {
-        setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy" + l['type'] + ".png", l['y'], l['health'],
-            l['speed'], l['shootingSpeed'])); shipEnemyArr[shipEnemyArr.length-1].countWidthHeight()}, l['delay']);
+        setTimeout(function() {
+            shipEnemyArr.push(new ShipEnemy("res/enemy" + l['type'] + ".png",
+                                            l['y'], l['health'], l['speed'],
+                                            l['shootingSpeed'], l['pattern']));
+
+            shipEnemyArr[shipEnemyArr.length-1].countWidthHeight()}, l['delay']);
     }
 }
