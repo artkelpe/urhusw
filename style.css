@@ -33,3 +33,7 @@ div a {
 .contactImg {
     width: 70px;
 }
+
+nav li {
+    margin-left: 3%;
+}
