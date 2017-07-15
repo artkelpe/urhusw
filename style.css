@@ -5,15 +5,27 @@
 
 body {
     background-image: url("res/web/p.jpg");
+
+}
+body p, span, div {
+    color: darkgrey;
     font-family:'fffforwa';
 }
 
 .container {
-    font-size: 24px;
+    font-size: 15px;
     color: aliceblue;
 }
 
 .bigLetter {
     font-size: 34pt;
     color: blueviolet;
+    margin-left: 3%;
+}
+ol li {
+    margin-bottom: 10px;
+}
+
+div a {
+    color:blueviolet;
 }

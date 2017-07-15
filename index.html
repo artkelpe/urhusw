@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>URHUSW - Main</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="res/web/animate.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -19,7 +20,7 @@
                 <li class="active"><a href="#">Main</a></li>
                 <li><a href="game.html">Game</a></li>
             </ul>
-            <ul class="nav navbar-nav center-block col-md-4">
+            <ul class="nav navbar-nav col-md-4">
                 <li>
                     <a class="center-block"><b>U R H U S W</b></a>
                 </li>
@@ -33,14 +34,34 @@
 </nav>
 
 
-<div class="container">
+
     <div class="row">
-        <span class="col-md-10 col-md-offset-1" style="font-family: fffforwa">
-            <span class="bigLetter">U</span>ltra &nbsp;<span class="bigLetter">R</span>eal &nbsp;<span class="bigLetter">H</span>yper &nbsp;
-            <span class="bigLetter">U</span>ltimate &nbsp;<span class="bigLetter">S</span>pace &nbsp;<span class="bigLetter">W</span>ars
+        <span class="center-block" style="font-family: fffforwa">
+            <h3 class="text-center">Get ready for...</h3>
+            <div class="text-center animated bounceInDown" id="titleDiv" style="margin-top:2%; display:none;">
+                <span class="bigLetter">U</span>ltra &nbsp;<span class="bigLetter">R</span>eal &nbsp;<span class="bigLetter">H</span>yper &nbsp;
+                <span class="bigLetter">U</span>ltimate &nbsp;<span class="bigLetter">S</span>pace &nbsp;<span class="bigLetter">W</span>ars
+            </div>
+            <div class="row animated bounceInDown" id="contentDiv" style="margin-top:4%; display:none;">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="text-center">Be prepared to sink into unforgettable world of spaceships, blasters and spaceflights!</div><br><br><br>
+                    <ol style="margin-left: 10%;">
+                        <li>Read the guide below how to play</li>
+                        <li>Think one more time if you are ready to spend the whole life playing this game</li>
+                        <li>Click <a href="game.html">here</a> to start</li>
+                    </ol>
+                </div>
+            </div>
         </span>
     </div>
-</div>
+
+    <script>
+        $(document).ready(() => {
+            setTimeout(() => {$("#titleDiv").show()}, 700);
+            setTimeout(() => {$("#contentDiv").show()}, 2000)
+        })
+    </script>
+
 
 
 </body>
