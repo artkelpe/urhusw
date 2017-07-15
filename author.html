@@ -30,5 +30,44 @@
     </div>
 </nav>
 
+<div class="container">
+    <div class="row">
+        <div class="center-block">
+            Artem Kelpe <br>
+            Faculty of Electrical Engineering <br>
+            Czech technical university in Prague <br>
+        </div>
+    </div>
+    <div class="row">
+        <a href="#" id="iconEmail"><img src="res/web/icon_email.png"></a>
+        <a href="#" id="iconGitHub"><img src="res/web/icon_github.png"></a>
+        <a href="#" id="iconLinkedin"><img src="res/web/icon_limkedin.png"></a>
+        <a href="#" id="iconVk"><img src="res/web/icon_vk.png"></a>
+    </div>
+    <br>
+    <div class="collapse" id="contact"></div>
+    <br>
+    <img src="res/web/tux_p.png">
+</div>
+
 </body>
 </html>
+
+<script>
+    $("#iconEmail").on("click", function () {
+        $("#contact").html("<a href='mailto:artkelpe@gmail.com'>artkelpe{at}gmail.com</a>");
+        $("#contact").collapse("show");
+    });
+    $("#iconGitHub").on("click", function () {
+        $("#contact").html("<a href='https://github.com/artkelpe'>github.com/artkelpe</a>");
+        $("#contact").collapse("show");
+    });
+    $("#iconLinkedin").on("click", function () {
+        $("#contact").html("<a href='https://www.linkedin.com/in/artem-kelpe-603913b5/'>LinkedIn</a>");
+        $("#contact").collapse("show");
+    });
+    $("#iconVk").on("click", function () {
+        $("#contact").html("<a href='https://vk.com/id25905750'>vk.com/id25905750</a>");
+        $("#contact").collapse("show");
+    });
+</script>
