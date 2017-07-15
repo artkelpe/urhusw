@@ -21,31 +21,24 @@
  -   straight
  .   dont move
  */
+/*
+ patterns of shooting:
+.    shoot
+-    wait
+ */
 
-var levels = {
+const levels = {
      '1' : [
          {
-         'type':11,
+         'type': 'enemy',
+         'model': 11,
          'y': 50,
          'health': 10,
-         'speed': 1.2,
-         'shootingSpeed': 120,
+         'speed': 1,
+         'shootingSpeed': 30,
          'delay': 500,
-         'pattern': "-____&^"
-        }, {
-         'type':12,
-         'y': 450,
-         'health': 10,
-         'speed': 1.2,
-         'shootingSpeed': 120,
-         'delay': 1500
-        }, {
-         'type':12,
-         'y': 200,
-         'health': 10,
-         'speed': 1.2,
-         'shootingSpeed': 120,
-         'delay': 2500,
+         'movePattern': "--...",
+         'shootingPattern': ".._"
         }
         ],
     '2': [
@@ -55,15 +48,29 @@ var levels = {
     ]
 };
 
-// function                   ShipEnemy(imgSrc, y, health, speed, shootingSpeed)
+// function                           ShipEnemy(imgSrc, y, health, speed, shootingSpeed)
 function loadLevel(lvl) {
     for (let l of lvl) {
-        setTimeout(function() {
-                shipEnemyArr.push(new ShipEnemy("res/enemy" + l['type'] + ".png",
-                                            l['y'], l['health'], l['speed'],
-                                            l['shootingSpeed'], l['pattern']));
+        if (l['type'] === 'enemy') {
+            setTimeout(function () {
+                    shipEnemyArr.push(new ShipEnemy("res/enemy" + l['model'] + ".png",
+                        l['y'], l['health'], l['speed'],
+                        l['shootingSpeed'], l['movePattern'], l['shootingPattern']));
+                    shipEnemyArr[shipEnemyArr.length - 1].countWidthHeight()
+                },
+                l['delay']);
+        }
+        else if (l['type'] === 'boss') {
+            setTimeout(function () {
+                    shipEnemyArr.push(new ShipEnemy("res/boss" + l['model'] + ".png",
+                        l['y'], l['health'], l['speed'],
+                        l['shootingSpeed'], l['movePattern']));
+                    shipEnemyArr[shipEnemyArr.length - 1].countWidthHeight()
+                },
+                l['delay']);
+        }
+        else if (l['type'] === 'bonus') {
 
-                shipEnemyArr[shipEnemyArr.length-1].countWidthHeight()},
-            l['delay']);
+        }
     }
 }

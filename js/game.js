@@ -52,7 +52,7 @@ var backCanvas, backContext, canvas, context,
     healthMeterImg,
     ship, shipShooting = 0,
     shipU, shipL, shipD, shipR, // bools indicating if the ship is moving in concrete direction
-    shipEnemyPatternCounter = 20, // how much frames for each element in enemy's pattern
+    shipEnemyMovePatternCounter = 20, // number of frames for each element in enemy's pattern to show
     shipEnemyArr = [],
     boltsShipArr = [], // array of bolts from ship that are on the screen right now
     boltsEnemyArr = [] // array of bolts from enemies that are on the screen right now
@@ -150,7 +150,7 @@ class Ship extends IShip{
 }
 
 class ShipEnemy extends IShip{
-    constructor(imgSrc, y, health, speed, shootingSpeed, pattern="-") {
+    constructor(imgSrc, y, health, speed, shootingSpeed, movePattern="-", shootingPattern=".") {
         super();
         this.img = new Image();this.img.src = imgSrc;
         this.x = CANVASWIDTH;
@@ -162,22 +162,27 @@ class ShipEnemy extends IShip{
         this.health = health;
         this.speed = speed;
         this.value = 10 * health;
+        
+        this.movePattern = movePattern;
+        this.actualElemOfMovePattern = 0;
+        this.counterMovePattern = 0;
+
         this.shootingSpeed = shootingSpeed;
-        this.counterForShooting = 0;
+        this.counterShootingSpeed = 0;
         this.isShooting = 0;
-        this.pattern = pattern;
-        this.actualElemOfPattern = 0;
-        this.counterForPattern = 0;
+        this.shootingPattern = shootingPattern;
+        this.actualElemOfShootingPattern = 0;
+        
     }
     countPosition() {
-        this.counterForPattern += 1;
-        if (this.counterForPattern === shipEnemyPatternCounter){
-            this.counterForPattern = 0;
-            this.actualElemOfPattern += 1;
-            if (this.actualElemOfPattern === this.pattern.length)
-                this.actualElemOfPattern = 0;
+        this.counterMovePattern += 1;
+        if (this.counterMovePattern === shipEnemyMovePatternCounter){
+            this.counterMovePattern = 0;
+            this.actualElemOfMovePattern += 1;
+            if (this.actualElemOfMovePattern === this.movePattern.length)
+                this.actualElemOfMovePattern = 0;
         }
-        switch (this.pattern[this.actualElemOfPattern]){
+        switch (this.movePattern[this.actualElemOfMovePattern]){
             case '^':{
                 if (this.y - 5 > 0)
                     this.y = this.y - 5;
@@ -281,8 +286,8 @@ function update() {
     // enemy ships
     for (let i = 0; i < shipEnemyArr.length; i++) {
         shipEnemyArr[i].countPosition();
-        shipEnemyArr[i].counterForShooting += 1;
-        if (shipEnemyArr[i].counterForShooting === shipEnemyArr[i].shootingSpeed)
+        shipEnemyArr[i].counterShootingSpeed += 1;
+        if (shipEnemyArr[i].counterShootingSpeed === shipEnemyArr[i].shootingSpeed)
             shipEnemyArr[i].isShooting = 1;
     }
 
@@ -295,9 +300,20 @@ function update() {
     // enemy ship bolts
     for (let i = 0; i < shipEnemyArr.length; i++) {
         if (shipEnemyArr[i].isShooting === 1) {
-            boltsEnemyArr.push(new BoltEnemy(shipEnemyArr[i].x-18, shipEnemyArr[i].y+10, 5, 1));
-            shipEnemyArr[i].counterForShooting = 0;
+            if (shipEnemyArr[i].shootingPattern[shipEnemyArr[i].actualElemOfShootingPattern] === '.') {
+                boltsEnemyArr.push(new BoltEnemy(shipEnemyArr[i].x - 18, shipEnemyArr[i].y + 10, 5, 1));
+
+            }
+            shipEnemyArr[i].counterShootingSpeed = 0;
             shipEnemyArr[i].isShooting = 0;
+            shipEnemyArr[i].actualElemOfShootingPattern += 1;
+            if (shipEnemyArr[i].actualElemOfShootingPattern === shipEnemyArr[i].shootingPattern.length)
+                shipEnemyArr[i].actualElemOfShootingPattern = 0;
+
+
+            /*boltsEnemyArr.push(new BoltEnemy(shipEnemyArr[i].x-18, shipEnemyArr[i].y+10, 5, 1));
+            shipEnemyArr[i].counterShootingSpeed = 0;
+            shipEnemyArr[i].isShooting = 0;*/
         }
     }
 
