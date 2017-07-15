@@ -55,7 +55,8 @@ var backCanvas, backContext, canvas, context,
     shipEnemyMovePatternCounter = 20, // number of frames for each element in enemy's pattern to show
     shipEnemyArr = [],
     boltsShipArr = [], // array of bolts from ship that are on the screen right now
-    boltsEnemyArr = [] // array of bolts from enemies that are on the screen right now
+    boltsEnemyArr = [], // array of bolts from enemies that are on the screen right now
+    gameIsOver = 0
 ;
 
 
@@ -340,6 +341,9 @@ function update() {
             }
         }
     }
+    if (ship.health < 1){
+        gameIsOver = 1;
+    }
 
     //ship bolts -> enemies
     for (let i = 0; i < shipEnemyArr.length; i++) {
@@ -404,10 +408,17 @@ function update() {
             context.drawImage(boltsEnemyArr[i].img, boltsEnemyArr[i].x, boltsEnemyArr[i].y);
     }
 
-
-    requestAnimFrame(function() {
-        update();
-    });
+    if (gameIsOver === 0) {
+        requestAnimFrame(function () {
+            update();
+        });
+    }
+    else if (gameIsOver === 1) {
+        $("#backCanv").hide();
+        $("#frontCanv").hide();
+        localStorage.setItem('highscore', ship.score);
+        $("#highscore").html(ship.score);
+    }
 }
 
 function init() {
@@ -446,4 +457,10 @@ function init() {
     //setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy12.png", 250, 10, 1.1, 80))}, 3000);
     loadLevel(levels['1']);
     update();
+}
+
+function gameOver() {
+    backContext.font="30px red";
+    //backContext.fillText("GAME OVER", CANVASWIDTH*0.4, CANVASHEIGHT*0.4);
+    backContext.fillText("GAME OVER", 200, 200);
 }

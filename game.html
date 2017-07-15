@@ -42,5 +42,15 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(() => {
+            if (localStorage.getItem('highscore') === null){
+                $("#highscore").html("0");
+            }
+            else
+                $("#highscore").html(localStorage.getItem('highscore'));
+        });
+    </script>
+
 </body>
 </html>

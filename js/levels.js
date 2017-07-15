@@ -37,9 +37,29 @@ const levels = {
          'speed': 1,
          'shootingSpeed': 30,
          'delay': 500,
-         'movePattern': "--...",
-         'shootingPattern': ".._"
-        }
+         'movePattern': "-",
+         'shootingPattern': "."
+        }, {
+             'type': 'enemy',
+             'model': 11,
+             'y': 250,
+             'health': 10,
+             'speed': 1,
+             'shootingSpeed': 30,
+             'delay': 1500,
+             'movePattern': "-",
+             'shootingPattern': "."
+         }, {
+             'type': 'enemy',
+             'model': 11,
+             'y': 450,
+             'health': 10,
+             'speed': 1,
+             'shootingSpeed': 30,
+             'delay': 4500,
+             'movePattern': "-",
+             'shootingPattern': "."
+         }
         ],
     '2': [
         {
