@@ -3,7 +3,17 @@
     src: url('res/FFFFORWA.TTF'); /*URL to font*/
 }
 
+body {
+    background-image: url("res/web/pattern.png");
+
+}
+
+.container {
+    font-size: 24px;
+    color: aliceblue;
+}
+
 .bigLetter {
-    font-size: 24pt;
-    color: darkblue;
+    font-size: 34pt;
+    color: blueviolet;
 }
