@@ -2,14 +2,6 @@
  * Created by kelpe on 05/07/17.
  */
 
-/* OLD
- patterns of movements:
- _   go down
- -   go straight
- ^   go up
- .   dont move
- */
-
 /*
  patterns of movements:
  ^   up
@@ -30,40 +22,96 @@
 const levels = {
      '1' : [
          {
-         'type': 'enemy',
-         'model': 11,
-         'y': 50,
-         'health': 10,
-         'speed': 1,
-         'shootingSpeed': 30,
-         'delay': 500,
-         'movePattern': "-",
-         'shootingPattern': "."
-        }, {
              'type': 'enemy',
              'model': 11,
-             'y': 250,
+             'y': 340,
              'health': 10,
-             'speed': 1,
-             'shootingSpeed': 30,
-             'delay': 1500,
+             'speed': 1.5,
+             'shootingSpeed': 140,
+             'delay': 1000,
              'movePattern': "-",
              'shootingPattern': "."
-         }, {
+         },
+         {
              'type': 'enemy',
              'model': 11,
-             'y': 450,
+             'y': 40,
              'health': 10,
-             'speed': 1,
-             'shootingSpeed': 30,
-             'delay': 4500,
+             'speed': 1.5,
+             'shootingSpeed': 140,
+             'delay': 3500,
+             'movePattern': "-",
+             'shootingPattern': "."
+         },
+         {
+             'type': 'enemy',
+             'model': 11,
+             'y': 200,
+             'health': 10,
+             'speed': 1.5,
+             'shootingSpeed': 140,
+             'delay': 6000,
              'movePattern': "-",
              'shootingPattern': "."
          }
         ],
     '2': [
         {
-
+            'type': 'enemy',
+            'model': 11,
+            'y': 140,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 90,
+            'delay': 12000,
+            'movePattern': "-",
+            'shootingPattern': ".-"
+        },
+        {
+            'type': 'enemy',
+            'model': 11,
+            'y': 340,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 90,
+            'delay': 12000,
+            'movePattern': "-",
+            'shootingPattern': "..-"
+        }
+    ],
+    '3': [
+        {
+            'type': 'enemy',
+            'model': 11,
+            'y': 100,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 140,
+            'delay': 17000,
+            'movePattern': "****&&&&",
+            'shootingPattern': ","
+        },
+        {
+            'type': 'enemy',
+            'model': 11,
+            'y': 100,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 140,
+            'delay': 18000,
+            'movePattern': "****&&&&",
+            'shootingPattern': "."
+        },
+        {
+            'type': 'enemy',
+            'model': 11,
+            'y': 100,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 140,
+            'delay': 19000,
+            'movePattern': "****&&&&",
+            'shootingPattern': "."
         }
     ]
 };

@@ -52,7 +52,8 @@ var backCanvas, backContext, canvas, context,
     healthMeterImg,
     ship, shipShooting = 0,
     shipU, shipL, shipD, shipR, // bools indicating if the ship is moving in concrete direction
-    shipEnemyMovePatternCounter = 20, // number of frames for each element in enemy's pattern to show
+    shipEnemyMovePatternCounter = 40, // number of frames for each element in enemy's pattern to show
+    shipEnemyVertSpeed = 2, // vertical speed of enemy ships
     shipEnemyArr = [],
     boltsShipArr = [], // array of bolts from ship that are on the screen right now
     boltsEnemyArr = [], // array of bolts from enemies that are on the screen right now
@@ -64,7 +65,8 @@ var backCanvas, backContext, canvas, context,
 //--------------------------------    Interface definitions    ---------------------------------------------------------
 class IShip {
     countXPosition() {
-        this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
+        //console.log(this.direction);
+        this.x -= this.speed;
     }
     countWidthHeight() {
         this.width = this.img.width;
@@ -186,12 +188,12 @@ class ShipEnemy extends IShip{
         switch (this.movePattern[this.actualElemOfMovePattern]){
             case '^':{
                 if (this.y - 5 > 0)
-                    this.y = this.y - 5;
+                    this.y = this.y - shipEnemyVertSpeed;
                 break;
             }
             case '&':{
                 if (this.y - 5 > 0)
-                    this.y = this.y - 5;
+                    this.y = this.y - shipEnemyVertSpeed;
                 super.countXPosition();
                 break;
             }
@@ -201,13 +203,13 @@ class ShipEnemy extends IShip{
             }
             case '*':{
                 if (this.y + 5 < CANVASHEIGHT - this.height)
-                    this.y = this.y + 5;
+                    this.y = this.y + shipEnemyVertSpeed;
                 super.countXPosition();
                 break;
             }
             case '_':{
                 if (this.y + 5 < CANVASHEIGHT - this.height)
-                    this.y = this.y + 5;
+                    this.y = this.y + shipEnemyVertSpeed;
                 break;
             }
             case '.':{
@@ -291,6 +293,7 @@ function update() {
         if (shipEnemyArr[i].counterShootingSpeed === shipEnemyArr[i].shootingSpeed)
             shipEnemyArr[i].isShooting = 1;
     }
+
 
     // ship bolts
     for (let i = 0; i < boltsShipArr.length; i++) {
@@ -385,8 +388,10 @@ function update() {
 
     //enemy ships
     for (let i = 0; i < shipEnemyArr.length; i++) {
-        if (shipEnemyArr[i].x < -100)
+        if (shipEnemyArr[i].x < -100) {
             shipEnemyArr.splice(i, 1);
+            ship.score -= 50;
+        }
         else {
             context.drawImage(shipEnemyArr[i].img, shipEnemyArr[i].x, shipEnemyArr[i].y);
         }
@@ -456,6 +461,8 @@ function init() {
     //setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy11.png", 150, 10, 2, 50))}, 2000);
     //setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy12.png", 250, 10, 1.1, 80))}, 3000);
     loadLevel(levels['1']);
+    loadLevel(levels['2']);
+    loadLevel(levels['3']);
     update();
 }
 
