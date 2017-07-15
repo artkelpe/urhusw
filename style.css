@@ -2,3 +2,8 @@
     font-family: 'fffforwa'; /*a name to be used later*/
     src: url('res/FFFFORWA.TTF'); /*URL to font*/
 }
+
+.bigLetter {
+    font-size: 24pt;
+    color: darkblue;
+}

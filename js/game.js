@@ -12,14 +12,6 @@ window.requestAnimFrame = (function(callback) {
         };
 })();
 
-/*
-patterns of movements:
- _   go down
- -   go straight
- ^   go up
- .   dont move
-*/
-
 
 // states of striking:
 //  0 - nothing
@@ -189,7 +181,8 @@ class ShipEnemy extends IShip{
         }
         switch (this.pattern[this.actualElemOfPattern]){
             case '_':{
-                this.y = this.y + 5;
+                if (this.y + 5 < CANVASHEIGHT - this.height)
+                    this.y = this.y + 5;
                 super.countPosition();
                 break;
             }
@@ -198,7 +191,8 @@ class ShipEnemy extends IShip{
                 break;
             }
             case '^':{
-                this.y = this.y - 5;
+                if (this.y - 5 > 0)
+                    this.y = this.y - 5;
                 super.countPosition();
                 break;
             }
