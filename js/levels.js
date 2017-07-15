@@ -2,11 +2,23 @@
  * Created by kelpe on 05/07/17.
  */
 
-/*
+/* OLD
  patterns of movements:
  _   go down
  -   go straight
  ^   go up
+ .   dont move
+ */
+
+/*
+ patterns of movements:
+ ^   up
+ &   up+left
+ <   left
+ >   right
+ *   down+left
+ _   down
+ -   straight
  .   dont move
  */
 
@@ -18,7 +30,8 @@ var levels = {
          'health': 10,
          'speed': 1.2,
          'shootingSpeed': 120,
-         'delay': 500
+         'delay': 500,
+         'pattern': "-____&^"
         }, {
          'type':12,
          'y': 450,

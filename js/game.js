@@ -62,7 +62,7 @@ var backCanvas, backContext, canvas, context,
 
 //--------------------------------    Interface definitions    ---------------------------------------------------------
 class IShip {
-    countPosition() {
+    countXPosition() {
         this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
     }
     countWidthHeight() {
@@ -170,8 +170,6 @@ class ShipEnemy extends IShip{
         this.counterForPattern = 0;
     }
     countPosition() {
-        //super.countPosition();
-
         this.counterForPattern += 1;
         if (this.counterForPattern === shipEnemyPatternCounter){
             this.counterForPattern = 0;
@@ -180,27 +178,37 @@ class ShipEnemy extends IShip{
                 this.actualElemOfPattern = 0;
         }
         switch (this.pattern[this.actualElemOfPattern]){
-            case '_':{
-                if (this.y + 5 < CANVASHEIGHT - this.height)
-                    this.y = this.y + 5;
-                super.countPosition();
-                break;
-            }
-            case '-':{
-                super.countPosition();
-                break;
-            }
             case '^':{
                 if (this.y - 5 > 0)
                     this.y = this.y - 5;
-                super.countPosition();
+                break;
+            }
+            case '&':{
+                if (this.y - 5 > 0)
+                    this.y = this.y - 5;
+                super.countXPosition();
+                break;
+            }
+            case '-':{
+                super.countXPosition();
+                break;
+            }
+            case '*':{
+                if (this.y + 5 < CANVASHEIGHT - this.height)
+                    this.y = this.y + 5;
+                super.countXPosition();
+                break;
+            }
+            case '_':{
+                if (this.y + 5 < CANVASHEIGHT - this.height)
+                    this.y = this.y + 5;
                 break;
             }
             case '.':{
                 break;
             }
             default:{
-                super.countPosition();
+                super.countXPosition();
             }
         }
     }
