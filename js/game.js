@@ -51,12 +51,13 @@ var backCanvas, backContext, canvas, context,
     stars = [], movingStars,
     healthMeterImg,
     ship, shipShooting = 0,
-    shipU, shipL, shipD, shipR, // bools indicating if the ship is moving in concrete direction
-    shipEnemyMovePatternCounter = 40, // number of frames for each element in enemy's pattern to show
-    shipEnemyVertSpeed = 2, // vertical speed of enemy ships
+    shipU, shipL, shipD, shipR,         // bools indicating if the ship is moving in concrete direction
+    shipEnemyImgs = [],                 //arr of images of enemyShips
+    shipEnemyMovePatternCounter = 40,   // number of frames for each element in enemy's pattern to show
+    shipEnemyVertSpeed = 2,             // vertical speed of enemy ships
     shipEnemyArr = [],
-    boltsShipArr = [], // array of bolts from ship that are on the screen right now
-    boltsEnemyArr = [], // array of bolts from enemies that are on the screen right now
+    boltsShipArr = [],                  // array of bolts from ship that are on the screen right now
+    boltsEnemyArr = [],                 // array of bolts from enemies that are on the screen right now
     gameIsOver = 0
 ;
 
@@ -153,9 +154,9 @@ class Ship extends IShip{
 }
 
 class ShipEnemy extends IShip{
-    constructor(imgSrc, y, health, speed, shootingSpeed, movePattern="-", shootingPattern=".") {
+    constructor(model, y, health, speed, shootingSpeed, movePattern="-", shootingPattern=".") {
         super();
-        this.img = new Image();this.img.src = imgSrc;
+        this.img = shipEnemyImgs[model-1];
         this.x = CANVASWIDTH;
         if (y === 0)
             this.y = Math.floor((Math.random() * CANVASHEIGHT-70) + 1);
@@ -175,6 +176,7 @@ class ShipEnemy extends IShip{
         this.isShooting = 0;
         this.shootingPattern = shootingPattern;
         this.actualElemOfShootingPattern = 0;
+        this.countWidthHeight();
         
     }
     countPosition() {
@@ -426,6 +428,12 @@ function update() {
     }
 }
 
+function gameOver() {
+    backContext.font="30px red";
+    //backContext.fillText("GAME OVER", CANVASWIDTH*0.4, CANVASHEIGHT*0.4);
+    backContext.fillText("GAME OVER", 200, 200);
+}
+
 function init() {
     // setting canvases
     backCanvas = document.getElementById("backCanv");
@@ -437,6 +445,16 @@ function init() {
     canvas.width = CANVASWIDTH;
     canvas.height = CANVASHEIGHT+40;
     context = backCanvas.getContext('2d');
+
+    //load images
+    for (let i = 1; i < 5; i++){
+        for (let j = 1; j < 3; j++){
+            let tmp = new Image();
+            tmp.src = "res/enemy" + i + j + ".png";
+            shipEnemyImgs.push(tmp);
+        }
+    }
+    //debugger;
 
     // create stars on background
     for (let i = 0; i < 40; i++)
@@ -460,14 +478,12 @@ function init() {
     // function                                  ShipEnemy(imgSrc, y, health, speed, shootingSpeed)
     //setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy11.png", 150, 10, 2, 50))}, 2000);
     //setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy12.png", 250, 10, 1.1, 80))}, 3000);
-    loadLevel(levels['1']);
-    loadLevel(levels['2']);
-    loadLevel(levels['3']);
+
+    //loadLevel(levels['1']);
+    //loadLevel(levels['2']);
+    loadLevel(1);
+    loadLevel(2);
+    //loadLevel(levels['3']);
     update();
 }
 
-function gameOver() {
-    backContext.font="30px red";
-    //backContext.fillText("GAME OVER", CANVASWIDTH*0.4, CANVASHEIGHT*0.4);
-    backContext.fillText("GAME OVER", 200, 200);
-}
