@@ -61,7 +61,9 @@ var backCanvas, backContext, canvas, context,
     gameIsOver = 0
 ;
 
-
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 //--------------------------------    Interface definitions    ---------------------------------------------------------
 class IShip {
@@ -104,11 +106,12 @@ class Ship extends IShip{
         this.x = 0;
         this.y = 0;
         this.health = 100;
-        this.speed = 5;
+        this.speed = 3.5;
         this.isProtected = 0;
         this.timeForProtected = 0;
         this.isHurt = 0;
         this.score = 100;
+        this.countWidthHeight();
     }
     countPosition() {
         // diagonal directions
@@ -337,7 +340,6 @@ function update() {
                 ship.y < boltsEnemyArr[i].y + boltsEnemyArr[i].size &&
                 ship.y + ship.height > boltsEnemyArr[i].y)
             {
-                console.log("SHOT");
                 boltsEnemyArr.splice(i, 1);
                 ship.health -= 10;
                 ship.isHurt = 1;
@@ -360,6 +362,7 @@ function update() {
             {
                 boltsShipArr.splice(i, 1);
                 shipEnemyArr[i].health -= 10;
+                console.log("SHOT");
             }
         }
     }
@@ -447,14 +450,19 @@ function init() {
     context = backCanvas.getContext('2d');
 
     //load images
+
+    let imgCounter = 0;
     for (let i = 1; i < 5; i++){
         for (let j = 1; j < 3; j++){
             let tmp = new Image();
             tmp.src = "res/enemy" + i + j + ".png";
+            tmp.onload = () => {
+                imgCounter += 1;
+            };
             shipEnemyImgs.push(tmp);
         }
     }
-    //debugger;
+
 
     // create stars on background
     for (let i = 0; i < 40; i++)
@@ -470,20 +478,20 @@ function init() {
     healthMeterImg = new Image();
     healthMeterImg.src = 'res/healthMeter.png';
 
+    // TODO change ship img size/canvas
     // create ship
     ship = new Ship("res/ship.png", "res/shipProtected.png", "res/shipHurt.png");
-    ship.countWidthHeight();
 
+    // TODO make some labels like "get ready..." "Go!"
 
-    // function                                  ShipEnemy(imgSrc, y, health, speed, shootingSpeed)
-    //setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy11.png", 150, 10, 2, 50))}, 2000);
-    //setTimeout(function() {shipEnemyArr.push(new ShipEnemy("res/enemy12.png", 250, 10, 1.1, 80))}, 3000);
-
-    //loadLevel(levels['1']);
-    //loadLevel(levels['2']);
-    loadLevel(1);
+    /*loadLevel(1);
     loadLevel(2);
-    //loadLevel(levels['3']);
+    loadLevel(3);
+    loadLevel(4);*/
+    for (let i = 1; i <= Object.keys(levels).length; i++) {
+        console.log(i);
+        loadLevel(i);
+    }
     update();
 }
 

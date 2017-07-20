@@ -22,15 +22,15 @@
 const delayBetweenLvls = 2000;
 
 const levels = {
-     '1' : [
+    '1' : [
          {
              'type': 'enemy',
              'model': 1,
              'y': 340,
              'health': 10,
-             'speed': 1.5,
-             'shootingSpeed': 140,
-             'delay': 1000,
+             'speed': 1.6,
+             'shootingSpeed': 130,
+             'delay': 5000,
              'movePattern': "-",
              'shootingPattern': "."
          },
@@ -39,9 +39,9 @@ const levels = {
              'model': 1,
              'y': 40,
              'health': 10,
-             'speed': 1.5,
-             'shootingSpeed': 140,
-             'delay': 200,
+             'speed': 1.6,
+             'shootingSpeed': 130,
+             'delay': 7500,
              'movePattern': "-",
              'shootingPattern': "."
          },
@@ -50,9 +50,9 @@ const levels = {
              'model': 1,
              'y': 200,
              'health': 10,
-             'speed': 1.5,
-             'shootingSpeed': 140,
-             'delay': 3000,
+             'speed': 1.6,
+             'shootingSpeed': 130,
+             'delay': 9000,
              'movePattern': "-",
              'shootingPattern': "."
          }
@@ -60,79 +60,201 @@ const levels = {
     '2': [
         {
             'type': 'enemy',
-            'model': 2,
-            'y': 140,
+            'model': 1,
+            'y': 90,
             'health': 10,
-            'speed': 1.5,
-            'shootingSpeed': 90,
-            'delay': 2000,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 6000,
             'movePattern': "-",
             'shootingPattern': ".-"
         },
         {
             'type': 'enemy',
-            'model': 2,
-            'y': 340,
+            'model': 1,
+            'y': 390,
             'health': 10,
-            'speed': 1.5,
-            'shootingSpeed': 90,
-            'delay': 3000,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 6000,
             'movePattern': "-",
-            'shootingPattern': "..-"
+            'shootingPattern': "-."
         }
     ],
     '3': [
         {
             'type': 'enemy',
-            'model': 1,
-            'y': 100,
+            'model': 2,
+            'y': 80,
             'health': 10,
             'speed': 1.5,
             'shootingSpeed': 140,
-            'delay': 17000,
+            'delay': 4000,
             'movePattern': "****&&&&",
             'shootingPattern': ","
         },
         {
             'type': 'enemy',
             'model': 2,
-            'y': 100,
+            'y': 80,
             'health': 10,
             'speed': 1.5,
             'shootingSpeed': 140,
-            'delay': 18000,
+            'delay': 4700,
             'movePattern': "****&&&&",
             'shootingPattern': "."
         },
         {
             'type': 'enemy',
             'model': 2,
-            'y': 100,
+            'y': 80,
             'health': 10,
             'speed': 1.5,
             'shootingSpeed': 140,
-            'delay': 19000,
+            'delay': 5400,
             'movePattern': "****&&&&",
             'shootingPattern': "."
+        }
+    ],
+    '4': [
+        {
+            'type': 'enemy',
+            'model': 2,
+            'y': 5,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 140,
+            'delay': 4000,
+            'movePattern': "****&&&&",
+            'shootingPattern': ","
+        },
+        {
+            'type': 'enemy',
+            'model': 2,
+            'y': 5,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 140,
+            'delay': 4700,
+            'movePattern': "****&&&&",
+            'shootingPattern': "."
+        },
+        {
+            'type': 'enemy',
+            'model': 2,
+            'y': 5,
+            'health': 10,
+            'speed': 1.5,
+            'shootingSpeed': 140,
+            'delay': 5400,
+            'movePattern': "****&&&&",
+            'shootingPattern': "."
+        },
+        {
+            'type': 'enemy',
+            'model': 1,
+            'y': 90,
+            'health': 10,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 4300,
+            'movePattern': "-",
+            'shootingPattern': ".-"
+        },
+        {
+            'type': 'enemy',
+            'model': 1,
+            'y': 390,
+            'health': 10,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 4300,
+            'movePattern': "-",
+            'shootingPattern': "-."
+        }
+    ],
+    '5': [
+        {
+            'type': 'enemy',
+            'model': 3,
+            'y': 200,
+            'health': 10,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 4000,
+            'movePattern': "--^^--__",
+            'shootingPattern': "..-"
+        }
+    ],
+    '6': [
+        {
+            'type': 'enemy',
+            'model': 3,
+            'y': 100,
+            'health': 10,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 4000,
+            'movePattern': "--^^--__",
+            'shootingPattern': "..-"
+        },
+        {
+            'type': 'enemy',
+            'model': 3,
+            'y': 300,
+            'health': 10,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 4000,
+            'movePattern': "--^^--__",
+            'shootingPattern': "..-"
+        }
+    ],
+    '7': [
+        {
+            'type': 'enemy',
+            'model': 3,
+            'y': 300,
+            'health': 10,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 4000,
+            'movePattern': "--^^--__",
+            'shootingPattern': "..-"
+        },
+        {
+            'type': 'enemy',
+            'model': 3,
+            'y': 300,
+            'health': 10,
+            'speed': 1.4,
+            'shootingSpeed': 70,
+            'delay': 4000,
+            'movePattern': "--^^--__",
+            'shootingPattern': "..-"
         }
     ]
 };
 
-// function                           ShipEnemy(imgSrc, y, health, speed, shootingSpeed)
+// function
 function loadLevel(lvl) {
-
+    // count delay
     for (let l of levels[String(lvl)]) {
         let delay = 0;
         if (lvl > 1){
-            let tmp = levels[String(lvl-1)];
-            delay = tmp[tmp.length - 1].delay + l['delay'];
+            for (let i = lvl-1; i !== 0; i--) {
+                let tmp = levels[String(i)];
+                delay += tmp[tmp.length - 1].delay + l['delay'];
+            }
         }
         else
             delay = l['delay'];
 
+
         if (l['type'] === 'enemy') {
             setTimeout( ()=> {
                     shipEnemyArr.push(new ShipEnemy(l['model'], l['y'], l['health'], l['speed'], l['shootingSpeed'], l['movePattern'], l['shootingPattern']));
+                    l['delay'] = delay;
                 }, delay);
                 //l['delay']);
         }
