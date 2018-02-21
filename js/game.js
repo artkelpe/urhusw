@@ -26,8 +26,10 @@ window.addEventListener('keydown', function(e) {
         case 39: shipR = 1; break; //Right key
         case 40: shipD = 1; break; //Down key
         case 32: {                 //Space key
-            if (shipShooting === 0)
+            if (shipShooting === 0) {
                 shipShooting = 1;
+                clickSound.play();
+            }
         }
     }
 }, false);
@@ -42,12 +44,12 @@ window.addEventListener('keyup', function(e) {
 }, false);
 
 // Constants
-var CANVASWIDTH = 920,
+let CANVASWIDTH = 920,
     CANVASHEIGHT = 520,
     STARSIZE = 2;
 
 // Global vars
-var backCanvas, backContext, canvas, context,
+let backCanvas, backContext, canvas, context,
     stars = [], movingStars,
     healthMeterImg,
     ship, shipShooting = 0,
@@ -61,7 +63,7 @@ var backCanvas, backContext, canvas, context,
     currentWave = 0,                    // number of current wave (i.e. level)
     totalWaves = 0,                     // total count of waves
     gameIsOver = 0,
-    gameFinished = 0
+    clickSound = new Audio('res/web/silencer.wav');
 ;
 
 function sleep(ms) {
