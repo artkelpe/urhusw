@@ -60,7 +60,8 @@ var backCanvas, backContext, canvas, context,
     boltsEnemyArr = [],                 // array of bolts from enemies that are on the screen right now
     currentWave = 0,                    // number of current wave (i.e. level)
     totalWaves = 0,                     // total count of waves
-    gameIsOver = 0
+    gameIsOver = 0,
+    gameFinished = 0
 ;
 
 function sleep(ms) {
@@ -427,17 +428,27 @@ function update() {
         });
     }
     else if (gameIsOver === 1) {
-        $("#backCanv").hide();
-        $("#frontCanv").hide();
-        localStorage.setItem('highscore', ship.score);
-        $("#highscore").html(ship.score);
+        gameOver();
     }
 }
 
 function gameOver() {
-    backContext.font="30px red";
-    //backContext.fillText("GAME OVER", CANVASWIDTH*0.4, CANVASHEIGHT*0.4);
-    backContext.fillText("GAME OVER", 200, 200);
+    $("#backCanv").hide();
+    $("#frontCanv").hide();
+    localStorage.setItem('highscore', ship.score);
+    $("#highscoreDiv").before(`<h2 class="text-center redText">Game is over</h2><br><br><br>`);
+    $("#highscore").html(ship.score);
+}
+
+function gameFinish() {
+    $("#backCanv").hide();
+    $("#frontCanv").hide();
+    localStorage.setItem('highscore', ship.score);
+    $("#highscoreDiv").before(`
+        <h2 class="text-center greenText">Mario, you saved the princess!</h2>
+        <h5 class="text-center greyText">but she is in another castle...</h5>
+        <br><br><br>`);
+    $("#highscore").html(ship.score);
 }
 
 function init() {

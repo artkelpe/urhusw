@@ -11,6 +11,17 @@ body p, span, div {
     color: darkgrey;
     font-family:'fffforwa';
 }
+.redText{
+    color: #c30000;
+}
+
+.greenText{
+    color: #11c300;
+}
+
+.greyText {
+    color: darkgrey;
+}
 
 .container {
     font-size: 15px;

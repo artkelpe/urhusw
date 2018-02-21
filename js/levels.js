@@ -273,8 +273,8 @@ function loadLevel(lvl) {
         }
         //debugger;
     }
-    //set number of wave
 
+    //set number of wave
     let delay = 0;
     if (lvl > 1){
         for (let i = lvl-1; i !== 0; i--) {
@@ -285,11 +285,15 @@ function loadLevel(lvl) {
     else{
         delay = levels[String(lvl)][0]['delay'];
     }
-
     setTimeout( _ => {
         currentWave = lvl; //do this in timeout
     }, delay);
 
+    if (lvl === Object.keys(levels).length)
+    //set timeout for game finish
+    setTimeout( _ => {
+        gameFinish();
+    }, delay+12000);
 
 
 }
