@@ -22,7 +22,7 @@
 const delayBetweenLvls = 2000;
 
 const levels = {
-    '1' : [
+    '1': [
          {
              'type': 'enemy',
              'model': 1,
@@ -181,7 +181,7 @@ const levels = {
             'health': 10,
             'speed': 1.4,
             'shootingSpeed': 70,
-            'delay': 4000,
+            'delay': 4500,
             'movePattern': "--^^--__",
             'shootingPattern': "..-"
         }
@@ -239,12 +239,14 @@ const levels = {
 // function
 function loadLevel(lvl) {
     // count delay
+
+    //iterate through all objects of chosen level
     for (let l of levels[String(lvl)]) {
         let delay = 0;
         if (lvl > 1){
             for (let i = lvl-1; i !== 0; i--) {
-                let tmp = levels[String(i)];
-                delay += tmp[tmp.length - 1].delay + l['delay'];
+                let prevLvl = levels[String(i)];
+                delay += prevLvl[prevLvl.length - 1].delay + l['delay'];
             }
         }
         else
@@ -252,14 +254,14 @@ function loadLevel(lvl) {
 
 
         if (l['type'] === 'enemy') {
-            setTimeout( ()=> {
+            setTimeout( _ => {
                     shipEnemyArr.push(new ShipEnemy(l['model'], l['y'], l['health'], l['speed'], l['shootingSpeed'], l['movePattern'], l['shootingPattern']));
                     l['delay'] = delay;
                 }, delay);
                 //l['delay']);
         }
         else if (l['type'] === 'boss') {
-            setTimeout(function () {
+            setTimeout( _ => {
                     shipEnemyArr.push(new ShipEnemy("res/boss" + l['model'] + ".png",
                         l['y'], l['health'], l['speed'],
                         l['shootingSpeed'], l['movePattern']));
@@ -271,4 +273,23 @@ function loadLevel(lvl) {
         }
         //debugger;
     }
+    //set number of wave
+
+    let delay = 0;
+    if (lvl > 1){
+        for (let i = lvl-1; i !== 0; i--) {
+            let prevLvl = levels[String(i)];
+            delay += prevLvl[prevLvl.length - 1].delay + levels[String(lvl)][0]['delay'];
+        }
+    }
+    else{
+        delay = levels[String(lvl)][0]['delay'];
+    }
+
+    setTimeout( _ => {
+        currentWave = lvl; //do this in timeout
+    }, delay);
+
+
+
 }

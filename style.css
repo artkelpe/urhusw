@@ -37,3 +37,19 @@ div a {
 nav li {
     margin-left: 3%;
 }
+
+#titleHeader {
+    animation-name: bounceInDown;
+    animation-duration: 1s;
+    animation-delay: 1s;
+}
+#titleDiv {
+    animation-name: bounceInDown;
+    animation-duration: 1s;
+    animation-delay: 2s;
+}
+#contentDiv {
+    animation-name: bounceInDown;
+    animation-duration: 1s;
+    animation-delay: 3s;
+}

@@ -52,12 +52,14 @@ var backCanvas, backContext, canvas, context,
     healthMeterImg,
     ship, shipShooting = 0,
     shipU, shipL, shipD, shipR,         // bools indicating if the ship is moving in concrete direction
-    shipEnemyImgs = [],                 //arr of images of enemyShips
+    shipEnemyImgs = [],                 // arr of images of enemyShips
     shipEnemyMovePatternCounter = 40,   // number of frames for each element in enemy's pattern to show
     shipEnemyVertSpeed = 2,             // vertical speed of enemy ships
     shipEnemyArr = [],
     boltsShipArr = [],                  // array of bolts from ship that are on the screen right now
     boltsEnemyArr = [],                 // array of bolts from enemies that are on the screen right now
+    currentWave = 0,                    // number of current wave (i.e. level)
+    totalWaves = 0,                     // total count of waves
     gameIsOver = 0
 ;
 
@@ -274,7 +276,8 @@ function updateBackground() {
     backContext.drawImage(healthMeterImg, 20, CANVASHEIGHT-10);
 
     backContext.font="15px fffforwa";
-    backContext.fillText("SCORE:   " + ship.score, 710, CANVASHEIGHT+20);
+    backContext.fillText("SCORE:  " + ship.score, 660, CANVASHEIGHT+20);
+    backContext.fillText("WAVE:  " + currentWave + "/" + totalWaves, 790, CANVASHEIGHT+20);
 }
 
 function update() {
@@ -484,10 +487,7 @@ function init() {
 
     // TODO make some labels like "get ready..." "Go!"
 
-    /*loadLevel(1);
-    loadLevel(2);
-    loadLevel(3);
-    loadLevel(4);*/
+    totalWaves = Object.keys(levels).length;
     for (let i = 1; i <= Object.keys(levels).length; i++) {
         console.log(i);
         loadLevel(i);
