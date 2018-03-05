@@ -2,12 +2,9 @@
  * Created by kelpe on 15/06/17.
  */
 
-
-//    http://scrumblr.ca/urhusw
-
-window.requestAnimFrame = (function(callback) {
+window.requestAnimFrame = (function (callback) {
     return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-        function(callback) {
+        function (callback) {
             window.setTimeout(callback, 1000 / 16);
         };
 })();
@@ -19,27 +16,58 @@ window.requestAnimFrame = (function(callback) {
 //  2 - key is still pressed, but the shot is already done
 
 // this shit is made because JS cant handle long press of multiple buttons
-window.addEventListener('keydown', function(e) {
-    switch(e.keyCode) {
-        case 37: shipL = 1; break; //Left key
-        case 38: shipU = 1; break; //Up key
-        case 39: shipR = 1; break; //Right key
-        case 40: shipD = 1; break; //Down key
+window.addEventListener('keydown', function (e) {
+    switch (e.keyCode) {
+        case 37:
+            shipL = 1;
+            break; //Left key
+        case 38:
+            shipU = 1;
+            break; //Up key
+        case 39:
+            shipR = 1;
+            break; //Right key
+        case 40:
+            shipD = 1;
+            break; //Down key
         case 32: {                 //Space key
             if (shipShooting === 0) {
                 shipShooting = 1;
                 clickSound.play();
             }
         }
+
+        //cheat code ctrl, esc, pgup, backspace, tab
+        case 0: {
+            y[0] = 1;
+        }
+        case 8:
+            y[1] = 1;
+        case 9:
+            y[2] = 1;
+        case 27:
+            y[3] = 1;
+        case 33:
+            y[4] = 1;
     }
 }, false);
-window.addEventListener('keyup', function(e) {
-    switch(e.keyCode) {
-        case 37: shipL = 0; break; //Left key
-        case 38: shipU = 0; break; //Up key
-        case 39: shipR = 0; break; //Right key
-        case 40: shipD = 0; break; //Down key
-        case 32: shipShooting = 0; break; //Space key
+window.addEventListener('keyup', function (e) {
+    switch (e.keyCode) {
+        case 37:
+            shipL = 0;
+            break; //Left key
+        case 38:
+            shipU = 0;
+            break; //Up key
+        case 39:
+            shipR = 0;
+            break; //Right key
+        case 40:
+            shipD = 0;
+            break; //Down key
+        case 32:
+            shipShooting = 0;
+            break; //Space key
     }
 }, false);
 
@@ -63,12 +91,9 @@ let backCanvas, backContext, canvas, context,
     currentWave = 0,                    // number of current wave (i.e. level)
     totalWaves = 0,                     // total count of waves
     gameIsOver = 0,
-    clickSound = new Audio('res/web/silencer.wav');
+    clickSound = new Audio('res/web/silencer.wav'),
+    y = [0, 0, 0, 0, 0]                 // secret! try mobile version to resolve what is it
 ;
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 //--------------------------------    Interface definitions    ---------------------------------------------------------
 class IShip {
@@ -76,6 +101,7 @@ class IShip {
         //console.log(this.direction);
         this.x -= this.speed;
     }
+
     countWidthHeight() {
         this.width = this.img.width;
         this.height = this.img.height;
@@ -83,10 +109,11 @@ class IShip {
 }
 
 class IBolt {
-    constructor (direction) {
+    constructor(direction) {
         this.size = 30;
         this.direction = direction;
     }
+
     countPosition() {
         this.x = (this.direction === 0) ? this.x + this.speed : this.x - this.speed;
     }
@@ -102,12 +129,15 @@ class Star {
     }
 }
 
-class Ship extends IShip{
+class Ship extends IShip {
     constructor(imgPath, imgProtectedPath, imgHurtPath) {
         super();
-        this.img = new Image(); this.img.src = imgPath;
-        this.imgProtected = new Image(); this.imgProtected.src = imgProtectedPath;
-        this.imgHurt = new Image(); this.imgHurt.src = imgHurtPath;
+        this.img = new Image();
+        this.img.src = imgPath;
+        this.imgProtected = new Image();
+        this.imgProtected.src = imgProtectedPath;
+        this.imgHurt = new Image();
+        this.imgHurt.src = imgHurtPath;
         this.x = 0;
         this.y = 0;
         this.health = 100;
@@ -116,8 +146,13 @@ class Ship extends IShip{
         this.timeForProtected = 0;
         this.isHurt = 0;
         this.score = 100;
-        this.countWidthHeight();
+        this.img.onload = ( _ => {
+            this.countWidthHeight();
+        })
+
+
     }
+
     countPosition() {
         // diagonal directions
         if (shipU === 1 && shipL === 1) {
@@ -150,6 +185,7 @@ class Ship extends IShip{
             if (ship.y < CANVASHEIGHT - 80) ship.y = ship.y + ship.speed;
         }
     }
+
     updateShip() {
         this.countPosition();
         if (ship.isProtected)
@@ -157,24 +193,27 @@ class Ship extends IShip{
         if (ship.timeForProtected === 0)
             ship.isProtected = 0;
     }
-    countWidthHeight() { super.countWidthHeight() }
+
+    countWidthHeight() {
+        super.countWidthHeight()
+    }
 
 }
 
-class ShipEnemy extends IShip{
-    constructor(model, y, health, speed, shootingSpeed, movePattern="-", shootingPattern=".") {
+class ShipEnemy extends IShip {
+    constructor(model, y, health, speed, shootingSpeed, movePattern = "-", shootingPattern = ".") {
         super();
-        this.img = shipEnemyImgs[model-1];
+        this.img = shipEnemyImgs[model - 1];
         this.x = CANVASWIDTH;
         if (y === 0)
-            this.y = Math.floor((Math.random() * CANVASHEIGHT-70) + 1);
+            this.y = Math.floor((Math.random() * CANVASHEIGHT - 70) + 1);
         else
             this.y = y;
         this.direction = 1;
         this.health = health;
         this.speed = speed;
         this.value = 10 * health;
-        
+
         this.movePattern = movePattern;
         this.actualElemOfMovePattern = 0;
         this.counterMovePattern = 0;
@@ -185,69 +224,86 @@ class ShipEnemy extends IShip{
         this.shootingPattern = shootingPattern;
         this.actualElemOfShootingPattern = 0;
         this.countWidthHeight();
-        
+
     }
+
     countPosition() {
         this.counterMovePattern += 1;
-        if (this.counterMovePattern === shipEnemyMovePatternCounter){
+        if (this.counterMovePattern === shipEnemyMovePatternCounter) {
             this.counterMovePattern = 0;
             this.actualElemOfMovePattern += 1;
             if (this.actualElemOfMovePattern === this.movePattern.length)
                 this.actualElemOfMovePattern = 0;
         }
-        switch (this.movePattern[this.actualElemOfMovePattern]){
-            case '^':{
+        switch (this.movePattern[this.actualElemOfMovePattern]) {
+            case '^': {
                 if (this.y - 5 > 0)
                     this.y = this.y - shipEnemyVertSpeed;
                 break;
             }
-            case '&':{
+            case '&': {
                 if (this.y - 5 > 0)
                     this.y = this.y - shipEnemyVertSpeed;
                 super.countXPosition();
                 break;
             }
-            case '-':{
+            case '-': {
                 super.countXPosition();
                 break;
             }
-            case '*':{
+            case '*': {
                 if (this.y + 5 < CANVASHEIGHT - this.height)
                     this.y = this.y + shipEnemyVertSpeed;
                 super.countXPosition();
                 break;
             }
-            case '_':{
+            case '_': {
                 if (this.y + 5 < CANVASHEIGHT - this.height)
                     this.y = this.y + shipEnemyVertSpeed;
                 break;
             }
-            case '.':{
+            case '.': {
                 break;
             }
-            default:{
+            default: {
                 super.countXPosition();
             }
         }
     }
-    countWidthHeight() { super.countWidthHeight(); }
+
+    countWidthHeight() {
+        super.countWidthHeight();
+    }
 }
 
 class BoltShip extends IBolt {
-    constructor() {
+    constructor(options) {
         super(0);
-        this.img = new Image();
-        this.img.src = "res/laser11.png";
-        this.y = ship.y + 20;
-        this.x = ship.x + 93;
-        this.speed = 10;
-        this.direction = 0;
+        if (options == null) {
+            this.img = new Image();
+            this.img.src = "res/laser11.png";
+            this.y = ship.y + 20;
+            this.x = ship.x + 93;
+            this.speed = 10;
+            this.direction = 0;
+        }
+        else{
+            this.img = new Image();
+            this.img.src = "res/laser11.png";
+            this.y = options.y;
+            this.x = ship.x + 93;
+            this.speed = options.speed;
+            this.direction = 0;
+        }
     }
-    countPosition() { super.countPosition(); }
+
+    countPosition() {
+        super.countPosition();
+    }
 }
 
 class BoltEnemy extends IBolt {
-    constructor(x, y, speed, direction) {
+    constructor(x, y, speed) {
         super(1);
         this.img = new Image();
         this.img.src = "res/laser21.png";
@@ -256,13 +312,16 @@ class BoltEnemy extends IBolt {
         this.speed = speed;
         //this.direction = direction;
     }
-    countPosition() { super.countPosition(); }
+
+    countPosition() {
+        super.countPosition();
+    }
 }
 
 //-------------------------------    updates     ----------------------------------------------------------------------
 function updateBackground() {
     backContext.fillStyle = "#223";
-    backContext.fillRect(0, 0, CANVASWIDTH, CANVASHEIGHT+30);
+    backContext.fillRect(0, 0, CANVASWIDTH, CANVASHEIGHT + 30);
     for (let i = 0; i < stars.length; i++) {
         backContext.fillStyle = stars[i].colour;
         stars[i].x = stars[i].x - 1;
@@ -274,27 +333,35 @@ function updateBackground() {
     }
 
     backContext.fillStyle = "#239c28";
-    backContext.fillRect(35, 520, (590 * ship.health / 100 < 0)? 0 : 590 * ship.health / 100, 20);
+    backContext.fillRect(35, 520, (590 * ship.health / 100 < 0) ? 0 : 590 * ship.health / 100, 20);
 
-    backContext.drawImage(healthMeterImg, 20, CANVASHEIGHT-10);
+    backContext.drawImage(healthMeterImg, 20, CANVASHEIGHT - 10);
 
-    backContext.font="15px fffforwa";
-    backContext.fillText("SCORE:  " + ship.score, 660, CANVASHEIGHT+20);
-    backContext.fillText("WAVE:  " + currentWave + "/" + totalWaves, 790, CANVASHEIGHT+20);
+    backContext.font = "15px fffforwa";
+    backContext.fillText("SCORE:  " + ship.score, 660, CANVASHEIGHT + 20);
+    backContext.fillText("WAVE:  " + currentWave + "/" + totalWaves, 790, CANVASHEIGHT + 20);
 }
 
 function update() {
-    context.fillStyle="rgba(0, 0, 200, 0)";
+    context.fillStyle = "rgba(0, 0, 200, 0)";
     context.fill();
+
+    let ifCheat = y.every(elem => elem === 1);
 
     // ---------------  count positions       ---------------------------
     // ship
     ship.countPosition();
 
-    if (shipShooting === 1 ){
+    if (shipShooting === 1) {
         boltsShipArr.push(new BoltShip(IBolt));
         ship.score -= 1;
         shipShooting = 2;
+
+        if (ifCheat){
+            boltsShipArr.push(new BoltShip({y: ship.y - 10, speed: 20}));
+            boltsShipArr.push(new BoltShip({y: ship.y + 20, speed: 20}));
+            boltsShipArr.push(new BoltShip({y: ship.y + 50, speed: 20}));
+        }
     }
 
     // enemy ships
@@ -326,9 +393,6 @@ function update() {
                 shipEnemyArr[i].actualElemOfShootingPattern = 0;
 
 
-            /*boltsEnemyArr.push(new BoltEnemy(shipEnemyArr[i].x-18, shipEnemyArr[i].y+10, 5, 1));
-            shipEnemyArr[i].counterShootingSpeed = 0;
-            shipEnemyArr[i].isShooting = 0;*/
         }
     }
 
@@ -344,17 +408,18 @@ function update() {
             if (ship.x < boltsEnemyArr[i].x + boltsEnemyArr[i].size &&
                 ship.x + ship.width > boltsEnemyArr[i].x &&
                 ship.y < boltsEnemyArr[i].y + boltsEnemyArr[i].size &&
-                ship.y + ship.height > boltsEnemyArr[i].y)
-            {
+                ship.y + ship.height > boltsEnemyArr[i].y) {
                 boltsEnemyArr.splice(i, 1);
                 ship.health -= 10;
                 ship.isHurt = 1;
-                setTimeout(function () {ship.isHurt = 0 ;}, 20);
+                setTimeout(function () {
+                    ship.isHurt = 0;
+                }, 20);
 
             }
         }
     }
-    if (ship.health < 1){
+    if (ship.health < 1) {
         gameIsOver = 1;
     }
 
@@ -364,8 +429,7 @@ function update() {
             if (shipEnemyArr[i].x < boltsShipArr[j].x + boltsShipArr[j].size &&
                 shipEnemyArr[i].x + shipEnemyArr[i].width > boltsShipArr[j].x &&
                 shipEnemyArr[i].y < boltsShipArr[j].y + boltsShipArr[j].size &&
-                shipEnemyArr[i].y + shipEnemyArr[i].height > boltsShipArr[j].y)
-            {
+                shipEnemyArr[i].y + shipEnemyArr[i].height > boltsShipArr[j].y) {
                 boltsShipArr.splice(i, 1);
                 shipEnemyArr[i].health -= 10;
                 console.log("SHOT");
@@ -453,23 +517,23 @@ function gameFinish() {
     $("#highscore").html(ship.score);
 }
 
-function init() {
+function startGame() {
     // setting canvases
     backCanvas = document.getElementById("backCanv");
     backCanvas.width = CANVASWIDTH;
-    backCanvas.height = CANVASHEIGHT+40;
+    backCanvas.height = CANVASHEIGHT + 40;
     backContext = backCanvas.getContext('2d');
 
     canvas = document.getElementById("frontCanv");
     canvas.width = CANVASWIDTH;
-    canvas.height = CANVASHEIGHT+40;
+    canvas.height = CANVASHEIGHT + 40;
     context = backCanvas.getContext('2d');
 
     //load images
 
     let imgCounter = 0;
-    for (let i = 1; i < 5; i++){
-        for (let j = 1; j < 3; j++){
+    for (let i = 1; i < 5; i++) {
+        for (let j = 1; j < 3; j++) {
             let tmp = new Image();
             tmp.src = "res/enemy" + i + j + ".png";
             tmp.onload = () => {
@@ -506,5 +570,44 @@ function init() {
         loadLevel(i);
     }
     update();
+}
+
+function startMobile() {
+    $("#highscoreDiv").html('');
+    $("#backCanv").hide();
+    $("#frontCanv").hide();
+    $("#mobileDiv").show();
+
+    let scrHeight = $(window).height();
+    let scrWidth = $(window).width();
+
+    let possibleHeight = scrHeight - 70;
+    let possibleWidth = scrWidth - 90;
+
+    let randMove;
+
+    setTimeout(_ => {
+        $("#shipMobileImg").show();
+        randMove = setInterval(_ => {
+            $("#shipMobileImg").css('top', Math.floor(Math.random() * (possibleHeight + 1))).css('left', Math.floor(Math.random() * (possibleWidth + 1)));
+        }, 400);
+
+    }, 10000);
+
+
+    $("#shipMobileImg").on('click', _ => {
+        clearInterval(randMove);
+        $("#mobileDiv").append(`<br><p>Press 5 keys: ctrl, esc, pageUp, backspace, tab </p>`);
+    });
+
+    //$("#shipMobileImg").css('top', Math.floor(Math.random() * (possibleHeight + 1))).css('left', Math.floor(Math.random() * (possibleWidth + 1)));
+
+}
+
+function init() {
+    if ($(window).width() < 1000)
+        startMobile();
+    else
+        startGame();
 }
 
