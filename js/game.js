@@ -20,35 +20,40 @@ window.addEventListener('keydown', function (e) {
     switch (e.keyCode) {
         case 37:
             shipL = 1;
-            break; //Left key
+            break;      //Left key
         case 38:
             shipU = 1;
-            break; //Up key
+            break;      //Up key
         case 39:
             shipR = 1;
-            break; //Right key
+            break;      //Right key
         case 40:
             shipD = 1;
-            break; //Down key
-        case 32: {                 //Space key
+            break;      //Down key
+        case 32: {      //Space key
             if (shipShooting === 0) {
                 shipShooting = 1;
                 clickSound.play();
             }
+            break;
         }
 
         //cheat code ctrl, esc, pgup, backspace, tab
-        case 0: {
+        case 0:
             y[0] = 1;
-        }
+            break;
         case 8:
             y[1] = 1;
+            break;
         case 9:
             y[2] = 1;
+            break;
         case 27:
             y[3] = 1;
+            break;
         case 33:
             y[4] = 1;
+            break;
     }
 }, false);
 window.addEventListener('keyup', function (e) {
@@ -91,8 +96,11 @@ let backCanvas, backContext, canvas, context,
     currentWave = 0,                    // number of current wave (i.e. level)
     totalWaves = 0,                     // total count of waves
     gameIsOver = 0,
-    clickSound = new Audio('res/web/silencer.wav'),
-    y = [0, 0, 0, 0, 0]                 // secret! try mobile version to resolve what is it
+    clickSound = new Audio('res/web/silencer.wav')
+;
+const
+    //y = [0, 0, 0, 0, 0]                 // secret! try mobile version to resolve what is it
+    y = [1, 1, 1, 1, 1]                 // secret! try mobile version to resolve what is it
 ;
 
 //--------------------------------    Interface definitions    ---------------------------------------------------------
@@ -279,7 +287,7 @@ class ShipEnemy extends IShip {
 class BoltShip extends IBolt {
     constructor(options) {
         super(0);
-        if (options == null) {
+        if (options == IBolt) {
             this.img = new Image();
             this.img.src = "res/laser11.png";
             this.y = ship.y + 20;
@@ -296,6 +304,7 @@ class BoltShip extends IBolt {
             this.direction = 0;
         }
     }
+
 
     countPosition() {
         super.countPosition();
@@ -353,11 +362,12 @@ function update() {
     ship.countPosition();
 
     if (shipShooting === 1) {
-        boltsShipArr.push(new BoltShip(IBolt));
-        ship.score -= 1;
-        shipShooting = 2;
-
-        if (ifCheat){
+        if (y.every(elem => elem === 1) === false) {
+            boltsShipArr.push(new BoltShip(IBolt));
+            ship.score -= 1;
+            shipShooting = 2;
+        }
+        else{
             boltsShipArr.push(new BoltShip({y: ship.y - 10, speed: 20}));
             boltsShipArr.push(new BoltShip({y: ship.y + 20, speed: 20}));
             boltsShipArr.push(new BoltShip({y: ship.y + 50, speed: 20}));
