@@ -99,8 +99,7 @@ let backCanvas, backContext, canvas, context,
     clickSound = new Audio('res/web/silencer.wav')
 ;
 const
-    //y = [0, 0, 0, 0, 0]                 // secret! try mobile version to resolve what is it
-    y = [1, 1, 1, 1, 1]                 // secret! try mobile version to resolve what is it
+    y = [0, 0, 0, 0, 0]                 // secret! try mobile version to resolve what is it
 ;
 
 //--------------------------------    Interface definitions    ---------------------------------------------------------
@@ -511,7 +510,8 @@ function update() {
 function gameOver() {
     $("#backCanv").hide();
     $("#frontCanv").hide();
-    localStorage.setItem('highscore', ship.score);
+	if ( ship.score > parseInt(localStorage.getItem('highscore')) )
+		localStorage.setItem('highscore', ship.score);
     $("#highscoreDiv").before(`<h2 class="text-center redText">Game is over</h2><br><br><br>`);
     $("#highscore").html(ship.score);
 }
@@ -519,7 +519,8 @@ function gameOver() {
 function gameFinish() {
     $("#backCanv").hide();
     $("#frontCanv").hide();
-    localStorage.setItem('highscore', ship.score);
+    if ( ship.score > parseInt(localStorage.getItem('highscore')) )
+        localStorage.setItem('highscore', ship.score);
     $("#highscoreDiv").before(`
         <h2 class="text-center greenText">Mario, you saved the princess!</h2>
         <h5 class="text-center greyText">but she is in another castle...</h5>
@@ -539,8 +540,7 @@ function startGame() {
     canvas.height = CANVASHEIGHT + 40;
     context = backCanvas.getContext('2d');
 
-    //load images
-
+    // load images
     let imgCounter = 0;
     for (let i = 1; i < 5; i++) {
         for (let j = 1; j < 3; j++) {
@@ -552,8 +552,7 @@ function startGame() {
             shipEnemyImgs.push(tmp);
         }
     }
-
-
+    
     // create stars on background
     for (let i = 0; i < 40; i++)
         stars.push(new Star(Math.floor(Math.random() * (CANVASWIDTH)), Math.floor(Math.random() * (CANVASHEIGHT)), Please.make_color({
@@ -564,21 +563,24 @@ function startGame() {
     // make stars move
     movingStars = setInterval(updateBackground, 25);
 
-    //add healthBar
+    // add healthBar
     healthMeterImg = new Image();
     healthMeterImg.src = 'res/healthMeter.png';
-
-    // TODO change ship img size/canvas
+    
     // create ship
     ship = new Ship("res/ship.png", "res/shipProtected.png", "res/shipHurt.png");
 
-    // TODO make some labels like "get ready..." "Go!"
-
+    // load levels
     totalWaves = Object.keys(levels).length;
     for (let i = 1; i <= Object.keys(levels).length; i++) {
         console.log(i);
         loadLevel(i);
     }
+    
+    if ( localStorage.getItem('highscore') == null )
+    	localStorage.setItem('highscore', 0);
+    
+    // run update function
     update();
 }
 
