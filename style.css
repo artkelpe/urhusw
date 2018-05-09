@@ -65,3 +65,6 @@ nav li {
     animation-delay: 3s;
 }
 
+#myNavbar {
+	margin-right: 1px;
+}
